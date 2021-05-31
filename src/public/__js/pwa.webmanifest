@@ -1,0 +1,16 @@
+{
+    "name": "ViaSat SpeedTest",
+    "short_name": "viasat-speedtest",
+    "description": "App challenge inatel",
+    "icons": [
+      {
+        "src": "/../img/spash-screen-image-512x512-pwa.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/",
+    "display": "fullscreen",
+    "theme_color": "#01FE66",
+    "background_color": "#000"
+}

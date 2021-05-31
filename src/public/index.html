@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<header>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#01FE66"/>
+	<title>Speed Test</title>
+	<script type="text/javascript" src="speedtest.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script type="text/javascript">
+		var notUpdateStatus = false;
+		var s = new Speedtest();	
+		
+		var uiData = null;
+
+		function loadScreen(x){
+			if(x == 0){
+				if(uiData != null && uiData.testState != 4){
+					$("#home").css("display", "none");
+					$("#performance").css("display", "block");
+				} else {
+					$("#home").css("display", "block");
+					$("#performance").css("display", "none");
+				}
+				$("#history").css("display", "none");
+				$("#performance-details").css("display", "none");
+				$(".homeBottom").addClass("border");
+				$(".performanceBottom").removeClass("border");
+				$(".historyBottom").removeClass("border");
+				$(".screen").css("background-image", "url('../img/stars.svg')")
+			} else if(x == 1){
+				$("#performance").css("display", "none");
+				$("#home").css("display", "none");
+				$("#history").css("display", "none");
+				$("#performance-details").css("display", "block");
+				$(".homeBottom").removeClass("border");
+				$(".performanceBottom").addClass("border");
+				$(".historyBottom").removeClass("border");
+				$(".screen").css("background-image", "none")
+				if(uiData == null || uiData.testState != 4){
+					$("#dataNull").css("display", "block")
+					$("#streamingCard").css("display", "none")
+					$("#facebookCard").css("display", "none")
+					$("#dataIconsNull").css("display", "none")
+					$("#instagramCard").css("display", "none")
+					$("#webCard").css("display", "none")
+				} else {
+					$("#dataNull").css("display", "none")
+					$("#streamingCard").css("display", "block")
+					$("#facebookCard").css("display", "none")
+					$("#instagramCard").css("display", "none")
+					$("#webCard").css("display", "none")
+					$("#dataIconsNull").css("display", "block")							
+
+					$(".statusMyNet").html("")
+					if(uiData['dlStatus'].split(".")[0] <= 1){
+						$(".statusMyNet").html("Bad")
+						$(".statusMyNet").css("background-color", "#FF4E4E")
+						$(".suggestedMyNet").html("<span>360p</span")
+					} else if(uiData['dlStatus'].split(".")[0] > 1 && uiData['dlStatus'].split(".")[0] <= 5){
+						$(".statusMyNet").html("Ok")
+						$(".statusMyNet").css("background-color", "#F6D45A")
+						$(".suggestedMyNet").html("<span>360p</span><span>480p</span")
+					} else if(uiData['dlStatus'].split(".")[0] > 5 && uiData['dlStatus'].split(".")[0] <= 20){
+						$(".statusMyNet").html("Good")
+						$(".statusMyNet").css("background-color", "#4EAAFF")
+						$(".suggestedMyNet").html("<span>360p</span><span>480p</span><span>720p</span>")
+					} else if(uiData['dlStatus'].split(".")[0] > 20){ 
+						$(".statusMyNet").html("Awesome")
+						$(".statusMyNet").css("background-color", "#73FA5E")
+						$(".suggestedMyNet").html("<span>360p</span><span>480p</span><span>720p</span><span>1080p</span><span>1440p+</span>")
+					}
+				}
+			} else if(x == 2){
+				$("#performance").css("display", "none");
+				$("#home").css("display", "none");
+				$("#history").css("display", "block");
+				$("#performance-details").css("display", "none");
+
+				$(".homeBottom").removeClass("border");
+				$(".performanceBottom").removeClass("border");
+				$(".historyBottom").addClass("border");
+				$(".screen").css("background-image", "none")
+				$('#myHistory').html("");
+				$.ajax({
+					type: "get",
+					url: "/getIp",
+					dataType: 'json',
+					success:function(dateIp){  
+						myIp = dateIp.split(" - ");
+						$.ajax({
+							type: "get",
+							url: "/listUsers/"+myIp[0],
+							dataType: 'json',
+							success:function(response){  
+								if(response != null){   
+									$.each(response.data,function(index,data){  
+										var url = url+data._id;  
+										index+=1;  
+										var dateUser = data.data.split("T");
+										$(document).ready(function(){
+											$('.modal').modal();
+										});
+										if(data.status == "Bad")
+											statusColor = "#FF4E4E"
+										else if(data.status == "Ok")
+											statusColor = "#F6D45A"
+										else if(data.status == "Good")
+											statusColor = "#4EAAFF"
+										else if(data.status == "Awesome")
+											statusColor = "#73FA5E"
+
+										$('#myHistory').append(
+											`
+												<a class="history row modal-trigger"  href="#modal`+data._id+`">
+													<div class="col s6 center">
+														<div class="row date" style="margin-bottom: 0;">Data</div>
+														<div class="row date" style="margin-bottom: 0;">`+dateUser[0]+`</div>
+													</div>
+													<div class="col s6 center"><div class="chip" style="background-color: `+statusColor+`">`+data.status+`</div></div>
+												</a>
+									
+												<div id="modal`+data._id+`" class="modal">
+													<div class="col">
+														<div class="row" style="width: 95%;	margin: 0 auto;	margin-bottom: 20px;">
+															<h1>Date</h1>
+															<h1>`+dateUser[0]+`</h1>
+														</div>
+														<div class="row" style="width: 95%;	margin: 0 auto;	margin-bottom: 20px;">
+															<h1>`+data.clientIp+`</h1>
+															<p>`+data.provider+` `+data.city+` `+data.country+`</p>
+														</div>
+
+														<div class="row group-history">
+															<div class="col s4 center">
+																<h1 class="name">Ping</h1>  
+																<div class="circle circle-history">
+																	<h1 class="pingMedidoHistory">`+data.pingStatus.split(".")[0]+`</h1>
+																	<h1 class="pingMedidoSpanHistory">ms</h1>
+																</div>
+															</div>
+															<div class="col s4 center">
+																<h1 class="name">Download</h1> 
+																<div class="circle circle-history">
+																	<h1 class="downloadMedidoHistory">`+data.dlStatus.split(".")[0]+`</h1>
+																	<h1 class="downloadMedidoSpanHistory">Mbps</h1>
+																</div>
+															</div>
+															<div class="col s4 center">
+																<h1 class="name">Upload</h1>  
+																<div class="circle circle-history">
+																	<h1 class="uploadMedidoHistory">`+data.ulStatus.split(".")[0]+`</h1>
+																	<h1 class="uploadMedidoSpanHistory">Mbps</h1>
+																</div>
+															</div>
+														</div>
+
+														<div class="col s6 center" style="margin-top: 30px">
+															<div class="chip" style="background-color: `+statusColor+`">`+data.status+`</div>
+														</div>
+
+														<div class="col s6 center" style="margin-top: 5vh;">
+															<a class="share" href="/share/`+data._id+`">Share</a>
+														</div>
+													</div>
+												</div>
+											`
+										);   
+									});
+								}  
+							},  
+						});
+					}
+				});
+			}
+		}  
+
+		function changeCard(opt){
+			if(opt == 0){
+				$("#dataNull").css("display", "none")
+				$("#streamingCard").css("display", "none")
+				$("#facebookCard").css("display", "block")
+				$("#instagramCard").css("display", "none")
+				$("#webCard").css("display", "none")
+			} else if(opt == 1) {
+				$("#dataNull").css("display", "none")
+				$("#streamingCard").css("display", "none")
+				$("#facebookCard").css("display", "none")
+				$("#instagramCard").css("display", "block")
+				$("#webCard").css("display", "none")
+			} else if(opt == 2) {
+				$("#dataNull").css("display", "none")
+				$("#streamingCard").css("display", "block")
+				$("#facebookCard").css("display", "none")
+				$("#instagramCard").css("display", "none")
+				$("#webCard").css("display", "none")
+			} else if(opt == 3) {
+				$("#dataNull").css("display", "none")
+				$("#streamingCard").css("display", "none")
+				$("#facebookCard").css("display", "none")
+				$("#instagramCard").css("display", "none")
+				$("#webCard").css("display", "block")
+			}
+		}
+
+		function startStop() {
+			$("#home").css("display", "none");
+			$("#performance").css("display", "block");
+			$(".pingMedido").html("");
+			$(".pingMedidoSpan").html("");
+			$(".uploadMedido").html("");
+			$(".uploadMedidoSpan").html("");
+			$(".downloadMedido").html("");
+			$(".downloadMedidoSpan").html("");
+			
+			if (s.getState() == 3) {
+				//speedtest is running, abort
+				s.abort();
+				data = null;
+			} else {
+				//test is not running, begin
+				s.onupdate = function (data) {
+					uiData = data;
+					console.log(data)
+					if(data['testState'] == 1){
+						// Ping medido
+						$(".pingMedido").html(data['pingStatus'].split(".")[0]);
+						$(".pingMedidoSpan").html("ms");
+
+						$("#statusNet").html(data['dlStatus'].split(".")[0]);
+						$("#icon-download").css("display", "block");
+						$("#statusSpan").html("");
+						if(data['dlStatus'] != ""){
+							$("#icon-download").css("display", "none");
+							$("#statusSpan").html("Mbps");
+						}
+					} else if(data['testState'] == 2){
+						$("#statusNet").html(data['pingStatus'].split(".")[0]);
+						if(data['pingStatus'] != ""){
+							$("#statusSpan").html("ms");
+						}
+					} else if(data['testState'] == 3){
+						// Download medido
+						$(".downloadMedido").html(data['dlStatus'].split(".")[0]);
+						$(".downloadMedidoSpan").html("Mbps");
+
+						if(notUpdateStatus == false){
+							$("#statusSpan").html("");
+							setTimeout(function(){ 
+								$("#icon-upload").css("display", "block");
+								notUpdateStatus = true;
+							}, 500);
+						}
+						$("#statusNet").html(data['ulStatus'].split(".")[0]);
+						if(data['ulStatus'] != ""){
+							$("#icon-upload").css("display", "none");
+							$("#statusSpan").html("Mbps");
+						}
+					} else if(data['testState'] == 4) {
+						$("#statusSpan").html("");
+						if(data['dlStatus'].split(".")[0] <= 1){
+							$("#statusNet").html("<img src='../img/turtle.svg' style='width: 66vw'></img>");
+						} else if(data['dlStatus'].split(".")[0] > 1 && data['dlStatus'].split(".")[0] <= 5){
+							$("#statusNet").html("<img src='../img/mouse.svg' style='width: 70vw'></img>");
+						} else if(data['dlStatus'].split(".")[0] > 5 && data['dlStatus'].split(".")[0] <= 20){
+							$("#statusNet").html("<img src='../img/rabbit.svg' style='width: 49vw'></img>");
+						} else if(data['dlStatus'].split(".")[0] > 20){ 
+							$("#statusNet").html("<img src='../img/cheetah.svg' style='width: 63vw'></img>");
+						}
+						
+
+						$.ajax({
+							type: "get",
+							url: "/getIp",
+							dataType: 'json',
+							success:function(clientIp){  
+								uiData = {
+									...uiData,
+									clientIp
+								}
+								$.ajax({
+									type: "POST",
+									url: "/saveUsers",
+									data: uiData
+								});
+							}
+						});
+
+						// Upload medido
+						$(".uploadMedido").html(data['ulStatus'].split(".")[0]);
+						$(".uploadMedidoSpan").html("Mbps");
+
+						$(".tester").css("background", "transparent");
+
+						data = null;
+						s.abort();
+					}
+				};
+				s.start();
+			}
+		}
+
+		$(document).ready(function(){
+			$('.modal').modal();
+		});
+
+	</script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</header>
+
+<body>
+	<nav id="navBar">
+        <ul>
+          <li><a href="#" onclick="loadScreen(0)"><div class="homeBottom border"></div><img src="./img/home.svg" alt="icon home"></a></li>
+          <li><a href="#" onclick="loadScreen(1)"><div class="performanceBottom"></div><img src="./img/performance.svg" alt="icon performance"></a></li>
+          <li><a href="#" onclick="loadScreen(2)"><div class="historyBottom"></div><img src="./img/history.svg" alt="icon history"></a></li>
+        </ul>
+    </nav>
+
+    <section class="screen">
+        <div id="home">
+			<a class="pulse" onclick="startStop()"> 
+				Start
+			</a>
+
+			<a href="https://github.com/librespeed/speedtest">Based on lib LibreSpeed ​​by Federico Dossena </a>
+		</div>
+
+		<div id="performance">
+			<div class="tester">
+				<p id="statusNet"></p>
+				<svg id="icon-download" viewBox="0 0 24.01 23.99">
+					<path d="M54.26,198.5a12,12,0,1,0,12,12A12,12,0,0,0,54.26,198.5Zm0,22a10,10,0,1,1,10-10A10,10,0,0,1,54.28,220.5Zm5-11a1,1,0,0,0-.71.29l-3.3,3.3V205.5a1,1,0,0,0-2,0v7.59L50,209.8a1,1,0,1,0-1.42,1.42l5,5a1,1,0,0,0,1.42,0l5-5A1,1,0,0,0,59.28,209.5Z" transform="translate(-42.26 -198.5)"></path>
+				</svg>
+				<svg id="icon-upload" viewBox="0 0 24.01 23.99">
+					<path d="M54.26,238a12,12,0,1,0,12,12A12,12,0,0,0,54.26,238Zm0,22a10,10,0,1,1,10-10A10,10,0,0,1,54.28,260ZM55,244.28a1,1,0,0,0-1.42,0l-5,5A1,1,0,0,0,50,250.7l3.3-3.3V255a1,1,0,0,0,2,0v-7.59l3.3,3.3A1,1,0,0,0,60,249.29Z" transform="translate(-42.26 -238)"></path>
+				</svg>
+				<span id="statusSpan"></span>
+			</div>
+
+			<div class="row group-result">
+				<div class="col s4 center">
+					<h1>Ping</h1>  
+					<div class="circle">
+						<h1 class="pingMedido"></h1>
+						<h1 class="pingMedidoSpan"></h1>
+					</div>
+				</div>
+				<div class="col s4 center">
+					<h1>Download</h1> 
+					<div class="circle">
+						<h1 class="downloadMedido"></h1>
+						<h1 class="downloadMedidoSpan"></h1>
+					</div>
+				</div>
+				<div class="col s4 center">
+					<h1>Upload</h1>  
+					<div class="circle">
+						<h1 class="uploadMedido"></h1>
+						<h1 class="uploadMedidoSpan"></h1>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="performance-details">
+			<div class="col center details">
+				<h1>Performance<br>Details</h1>
+
+				<div class="row card" id="dataNull">
+					<div class="row center" style="display: flex; align-items: center; justify-content: center;">
+						<img src="./img/warning.svg" width="90" height="90" style="margin-right: 3vw; fill: #fff;" alt="Icon Warning">
+					</div>
+					
+					<div class="streaming">
+						<div class="row">
+							<span class="line"></span>
+							<h1 style="font-size: 1.3rem; margin-top: 15px;">Check connection for <br/>more details</h1>
+						</div>
+					</div>
+				</div>
+
+				<div class="row card" id="facebookCard">
+					<div class="row center" style="display: flex; align-items: center; justify-content: center;">
+						<img src="./img/facebook.svg" width="35" height="35" style="margin-right: 3vw;" alt="Icon facebook">
+						<h1>Facebook</h1>
+					</div>
+					<div class="row center" style="margin: 0;">
+						<div class="chip statusMyNet"></div>
+					</div>
+				</div>
+
+				<div class="row card" id="instagramCard">
+					<div class="row center" style="display: flex; align-items: center; justify-content: center;">
+						<img src="./img/instagram.svg" width="35" height="35" style="margin-right: 3vw;" alt="Icon Instagram">
+						<h1>Instagram</h1>
+					</div>
+					<div class="row center" style="margin: 0;">
+						<div class="chip statusMyNet"></div>
+					</div>
+				</div>
+
+				<div class="row card" id="webCard">
+					<div class="row center" style="display: flex; align-items: center; justify-content: center;">
+						<img src="./img/web.svg" width="35" height="35" style="margin-right: 3vw;" alt="Icon WEB">
+						<h1>WEB</h1>
+					</div>
+					<div class="row center" style="margin: 0;">
+						<div class="chip statusMyNet"></div>
+					</div>
+				</div>
+
+				<div class="row card" id="streamingCard">
+					<div class="row center" style="display: flex; align-items: center; justify-content: center;">
+						<img src="./img/streaming.svg" width="35" height="35" style="margin-right: 3vw;" alt="Icon streaming">
+						<h1>Streaming</h1>
+					</div>
+					<div class="row center" style="margin: 0;">
+						<div class="chip statusMyNet"></div>
+					</div>
+					
+					<div class="streaming">
+						<div class="row">
+							<span class="line"></span>
+							<h1 style="font-size: 1.3rem; margin-top: 15px;">Suggested Resolutions</h1>
+						</div>
+						<div class="row suggestedMyNet">
+						</div>
+					</div>
+				</div>
+
+				<div  id="dataIconsNull">
+					<div class="row">
+						<h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0;">Apps to test</h1>
+					</div>
+	
+					<div class="row">
+						<div class="col" onclick="changeCard(0)"><img src="./img/facebook-1.svg" alt="Icon Facebook"></div>
+						<div class="col" onclick="changeCard(1)"><img src="./img/instagram-1.svg" alt="Icon Instagram"></div>
+						<div class="col" onclick="changeCard(2)"><img src="./img/streaming-1.svg" alt="Icon Streaming"></div>
+						<div class="col" onclick="changeCard(3)"><img src="./img/web-1.svg" alt="Icon Web"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="history">
+
+			<div class="col center details">
+				<h1>History</h1>
+
+				<div id="myHistory"></div>
+			</div>
+		</div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,377 @@
+* {
+    padding: 0;
+    margin: 0;
+    vertical-align: baseline;
+    list-style: none;
+    border: 0;
+}
+
+body {
+    font-family: 'Comfortaa', cursive;
+    background: linear-gradient(180deg, #2A2672 0%, #0B0C3A 100%);
+}
+
+#navBar {
+    background-color: #0E0E40;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 2px solid #01FE66;
+    height: 70px;
+}
+
+#navBar ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#navBar li {
+    display: inline-block;
+    padding-top: 17px;
+}
+
+#navBar li .border {
+    margin-top: -17px;
+    width: 100%;
+    height: 12px;
+    margin-bottom: 5px;
+    background-color: #01FE66;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#navBar li img {
+    max-height: 40px;
+}
+
+.screen {
+    width: 100vw;
+    height: calc(100vh - 70px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../img/stars.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-direction: column;
+}
+
+#home a:nth-child(2) {
+    color: #fff;
+    font-size: 0.7rem;
+    position: absolute;
+    bottom: 90px;
+    width: 100vw;
+    text-align: center;
+    left: 0;
+}
+
+.pulse {
+    height: 60vw;
+    width: 60vw;
+    background: #01FE66;
+    position: relative;
+    left: 0;
+    right: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /* margin-bottom: 70%; */
+}
+
+.pulse:before,
+.pulse:after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #01FE66;
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+.pulse:before {
+    animation: pulse 2s ease-out infinite;
+}
+
+.pulse:after {
+    animation: pulse 2s 1s ease-out infinite;
+}
+
+@keyframes pulse {
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+#performance {
+    display: none;
+    width: 100vw;
+    margin-top: 10vh;
+}
+
+/* TESTER */
+.tester {
+    height: 90vw;
+    width: 90vw;
+    background: #fff;
+    margin: 0 auto;
+    border-radius: 50%;
+    text-align: center;
+    border: 25px solid #6B4DD8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tester p {
+    color: #2E2162;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    font-size: 4.7rem;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.35);
+    margin-top: 5vh;
+}
+
+.tester span {
+    color: #2E2162;
+    font-family: Comfortaa;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 3.3rem;
+    text-align: center;
+}
+
+#icon-download {
+    fill: #2E2162;
+    display: none;
+    width: 15vw;
+    position: absolute;
+}
+
+#icon-upload {
+    fill: #2E2162;
+    display: none;
+    width: 15vw;
+    position: absolute;
+}
+
+.group-result {
+    margin: 5vh 0;
+    height: 15vh;
+}
+
+.group-result h1 {
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0 !important;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 27vw;
+    height: 27vw;
+    border: 4px solid #01FE66;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.circle h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.circle h1:nth-child(1) {
+    font-size: 2.3rem;
+}
+
+#performance-details {
+    display: none;
+    position: absolute;
+    top: 0;
+}
+
+.details h1 {
+    color: #fff;
+    font-size: 2.6rem;
+    text-align: center;
+}
+
+.details .card {
+    background-color: #0B0C3A;
+    border: 3px solid #01FE66;
+    box-sizing: border-box;
+    border-radius: 15px;
+    width: 80vw;
+    padding: 20px 0;
+    margin: 0 auto;
+}
+
+.details .card h1 {
+    display: inline-block;
+    font-size: 1.8rem;
+}
+
+.details .card h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.chip {
+    width: 86px;
+    height: 25px;
+    text-align: center;
+    margin: 0;
+    color: #2E2162;
+    font-size: 1rem;
+}
+
+.details .line {
+    width: 80%;
+    height: 2px;
+    background-color: #fff;
+    display: inline-block;
+    border-radius: 100%;
+}
+
+.details span {
+    color: #fff;
+    margin: 0 2vw;
+    text-decoration: underline;
+}
+
+#history {
+    display: none;
+    position: absolute;
+    top: 0;
+}
+
+.history {
+    width: 80vw;
+    border-top: 2px solid #01FE66;
+    display: flex;
+    align-items: center;
+    align-content: space-around;
+    height: 75px;
+    margin-bottom: 0;
+}
+
+.history .date {
+    color: #fff;
+    font-size: 1.3rem;
+}
+
+.modal {
+    background: #292570 !important;
+    border: 2px solid #01FE66 !important;
+    box-sizing: border-box;
+    border-radius: 30px !important;
+    top: 20% !important;
+    height: 60vh;
+    padding: 20px 0;
+    width: 90vw;
+}
+
+.modal h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.modal p {
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.circle-history {
+    width: 23vw;
+    height: 23vw;
+    border: 3px solid #01FE66;
+}
+
+.group-history {
+    width: 85vw;
+    margin: 0 auto !important; 
+}
+
+.group-history .name {
+    font-size: 5vw;
+}
+
+.group-history .circle h1 {
+    margin-bottom: 0;
+    text-align: center;
+    display: inline-block;
+    font-size: 7vw;
+}
+.group-history .circle h1:nth-child(2) {
+    font-size: 5vw;
+    font-weight: 300;
+}
+
+.share {
+    border: 2px solid #6B4DD8;
+    box-sizing: border-box;
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-size: 1.3rem;
+    color: #fff;
+    font-weight: 300;
+}
+
+/* Shared */
+.shared {
+    background: #292570 !important;
+    border: 2px solid #01FE66 !important;
+    box-sizing: border-box;
+    border-radius: 30px !important;
+    margin-top: 20%;
+    height: 60vh;
+    padding: 20px 0;
+    width: 90vw;
+    z-index: 3;
+}
+
+.shared h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.shared .date {
+    margin: 0;
+}
+
+.shared p {
+    color: #fff;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.shared .name {
+    margin-top: 0;
+}
+
+.shared .group-history .circle h1 {
+    margin-top: 10px;
+}
+
+.margin-0 {
+    margin: 0 !important;
+}

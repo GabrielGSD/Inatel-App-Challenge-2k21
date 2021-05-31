@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<header>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Speed Test</title>
+	<script type="text/javascript" src="speedtest.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script type="text/javascript">
+		var loc_array = document.location.href.split('/');
+		var id = loc_array[loc_array.length - 1];
+		console.log(id);
+		$.ajax({
+			type: "get",
+			url: "../shareNet/"+id,
+			dataType: 'json',
+			success:function(response){  
+				console.log(response)
+				if(response != null){
+					$.each(response.data,function(index,data){  
+						var dateUser = data.data.split("T");
+						$(".date").html(dateUser[0]);
+						$(".city").html(data.city);
+						$(".provider").html(data.provider);
+						
+						$(".pingMedidoShare").html(data.pingStatus.split(".")[0]);
+						$(".downloadMedidoShare").html(data.dlStatus.split(".")[0]);
+						$(".uploadMedidoShare").html(data.ulStatus.split(".")[0]);
+
+					});
+				}
+			},  
+		});
+
+	</script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</header>
+
+<body>
+	<nav id="navBar">
+        <ul>
+          <li><a href="/"><div class="homeBottom border"></div><img src="../img/home.svg" alt="icon home"></a></li>
+          <li><a href="/"><div class="performanceBottom"></div><img src="../img/performance.svg" alt="icon performance"></a></li>
+          <li><a href="/"><div class="historyBottom"></div><img src="../img/history.svg" alt="icon history"></a></li>
+        </ul>
+    </nav>
+
+    <section class="screen">
+		<div id="history" style="display: block;">
+			<div class="shared">
+				<div class="col">
+					<div class="row" style="width: 95%;	margin: 0 auto;	margin-bottom: 20px;">
+						<h1>Date</h1>
+						<h1 class="date"></h1>
+					</div>
+					<div class="row" style="width: 95%;	margin: 0 auto;	margin-bottom: 20px;">
+						<h1 class="city"></h1>
+						<p class="provider"></p>
+					</div>
+					
+					<div class="row group-history">
+						<div class="col s4 center">
+							<h1 class="name">Ping</h1>  
+							<div class="circle circle-history">
+								<h1 class="pingMedidoShare"></h1>
+								<h1 class="pingMedidoSpanHistory margin-0">ms</h1>
+							</div>
+						</div>
+						<div class="col s4 center">
+							<h1 class="name">Download</h1> 
+							<div class="circle circle-history">
+								<h1 class="downloadMedidoShare"></h1>
+								<h1 class="downloadMedidoSpanHistory margin-0">Mbps</h1>
+							</div>
+						</div>
+						<div class="col s4 center">
+							<h1 class="name">Upload</h1>  
+							<div class="circle circle-history">
+								<h1 class="uploadMedidoShare"></h1>
+								<h1 class="uploadMedidoSpanHistory margin-0">Mbps</h1>
+							</div>
+						</div>
+					</div>
+	
+					<!-- <div class="col s6 center" style="margin-top: 30px">
+						<div class="chip statusShare"></div>
+					</div> -->
+	
+					<!-- <div class="col s6 center" style="margin-top: 5vh;">
+						<a class="share" href="">Share</a>
+					</div> -->
+				</div>
+			</div>
+		</div>
+    </section>
+
+	
+</body>
+
+</html>

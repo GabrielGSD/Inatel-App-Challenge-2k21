@@ -1,0 +1,23 @@
+{
+  "name": "speed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node ./src/app.js"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cors": "^2.8.5",
+    "express": "^4.16.3",
+    "gps-distance": "^0.0.4",
+    "mongodb": "^3.6.9",
+    "mongoose": "*",
+    "nodemon": "^2.0.7",
+    "random-bytes": "^1.0.0",
+    "request": "^2.85.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
